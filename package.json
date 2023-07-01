@@ -2,10 +2,10 @@
   "name": "parcel-project-template",
   "version": "2.0.0",
   "description": "",
-  "homepage": "https://brizhak.github.io/project-FullStackFamily",
+  "homepage": "https://github.com/Serdiuk-Maksym/BookshelfExample",
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /project-FullStackFamily/"
+    "build": "parcel build src/*.html --public-url /BookshelfExample/"
   },
   "repository": {
     "type": "git",
