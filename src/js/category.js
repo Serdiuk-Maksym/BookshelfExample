@@ -10,9 +10,9 @@ const categoryEl = document.querySelector('.category-list');
 const booksCategoryEl = document.querySelector('.books-category');
 const h1El = document.querySelector('.title-category');
 
-allCategorys();
+allCategories();
 
-async function allCategorys() {
+async function allCategories() {
   showLoader();
 
   await fetchTopBooks().then(topBooks => {
@@ -22,17 +22,17 @@ async function allCategorys() {
   hideLoader();
 }
 
-addCategorys();
+addCategories();
 
-async function addCategorys() {
+async function addCategories() {
   showLoader();
 
-  await fetchCategoryList().then(categorys => renderCategorys(categorys));
+  await fetchCategoryList().then(categories => renderCategories(categories));
 
   hideLoader();
 }
 
-function renderCategorys(arr) {
+function renderCategories(arr) {
   const markup = arr
     .map(({ list_name }) => {
       return `
@@ -50,14 +50,14 @@ categoryEl.addEventListener('click', onSelectCategory);
 function onSelectCategory(evt) {
   let category = evt.target.textContent;
   if (category === 'All categories') {
-    allCategorys();
+    allCategories();
   }
 
   let AllTitle = category.split(' ');
-  let lastWorld = AllTitle.pop();
+  let lastWord = AllTitle.pop();
   h1El.innerHTML = ` <h1 class="title-category"> ${AllTitle.join(
     ' '
-  )} <span class="title-secondary">${lastWorld}</span></h1>`;
+  )} <span class="title-secondary">${lastWord}</span></h1>`;
 
   showLoader();
 
@@ -75,7 +75,7 @@ function onSelectCategory(evt) {
 
 function renderBooks(arr) {
   const markup = arr
-    .map(({ book_image, author, title }) => {
+    .map(({ _id, book_image, author, title }) => {
       return `
       <a href="#" class="book-card" id="${_id}">
       <div class="book-carts"> 
@@ -132,7 +132,5 @@ function renderTopBooks(arr) {
   } else {
     markup = `<ul class="category-item-list">${markupDesktop}  ${markupBtn}</ul>`;
   }
-  //  markup = markupBook + markupBtn;
-
-  return booksCategoryEl.insertAdjacentHTML('beforeend', markup);
+  booksCategoryEl.insertAdjacentHTML('beforeend', markup);
 }
