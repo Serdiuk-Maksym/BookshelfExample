@@ -119,18 +119,19 @@ function renderTopBooks(arr) {
   );
 
   const markupBtn = `<button class="see-more">see more</button>`;
-  const screenWidth = window.screen.width;
-  const markupMobile = markupBook.slice(0, 1).join('');
-  const markupLaptop = markupBook.slice(0, 3).join('');
-  const markupDesktop = markupBook.slice(0, 5).join('');
+  const screenWidth = window.innerWidth;
+  let numToShow = 0;
 
-  let markup = '';
   if (screenWidth < 767) {
-    markup = `<ul class="category-item-list">${markupMobile}  ${markupBtn}</ul>`;
-  } else if (screenWidth < 1440 && screenWidth >= 768) {
-    markup = `<ul class="category-item-list">${markupLaptop}  ${markupBtn}</ul>`;
+    numToShow = 1;
+  } else if (screenWidth < 1024) {
+    numToShow = 3;
   } else {
-    markup = `<ul class="category-item-list">${markupDesktop}  ${markupBtn}</ul>`;
+    numToShow = 5;
   }
+
+  const markup = `<ul class="category-item-list">${markupBook
+    .slice(0, numToShow)
+    .join('')} ${markupBtn}</ul>`;
   booksCategoryEl.insertAdjacentHTML('beforeend', markup);
 }
