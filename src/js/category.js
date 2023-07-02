@@ -15,12 +15,9 @@ allCategorys();
 async function allCategorys() {
   showLoader();
 
-  try {
-    const topBooks = await fetchTopBooks();
-    topBooks.forEach(books => renderTopBooks(books));
-  } catch (error) {
-    console.error(error);
-  }
+  await fetchTopBooks().then(topBooks => {
+    topBooks.map(books => renderTopBooks(books));
+  });
 
   hideLoader();
 }
@@ -30,12 +27,7 @@ addCategorys();
 async function addCategorys() {
   showLoader();
 
-  try {
-    const categorys = await fetchCategoryList();
-    renderCategorys(categorys);
-  } catch (error) {
-    console.error(error);
-  }
+  await fetchCategoryList().then(categorys => renderCategorys(categorys));
 
   hideLoader();
 }
@@ -61,7 +53,12 @@ function onSelectCategory(evt) {
     allCategorys();
   }
 
-  h1El.innerHTML = category;
+  let AllTitle = category.split(' ');
+  let lastWorld = AllTitle.pop();
+  h1El.innerHTML = ` <h1 class="title-category"> ${AllTitle.join(
+    ' '
+  )} <span class="title-secondary">${lastWorld}</span></h1>`;
+
   showLoader();
 
   fetchCertainCategory(category)
@@ -80,6 +77,7 @@ function renderBooks(arr) {
   const markup = arr
     .map(({ book_image, author, title }) => {
       return `
+      <a href="#" class="book-card" id="${_id}">
       <div class="book-carts"> 
         <img src="${book_image}" alt="${title}" class="book-img" loading="lazy" width=335>
         <div class="book-description"> 
@@ -87,6 +85,8 @@ function renderBooks(arr) {
           <p class="book-author">${author}</p>
         </div>
       </div>
+      </a>
+      
       `;
     })
     .join('');
@@ -94,22 +94,45 @@ function renderBooks(arr) {
 }
 
 function renderTopBooks(arr) {
-  const markup = arr
-    .map(({ book_image, title, author, list_name }) => {
+  const markupBook = arr.map(
+    ({ _id, book_image, title, author, list_name }) => {
       return `
-      <div class="book-carts"> 
-        <p class="category-section">${list_name}</p>
-        <img src="${book_image}" alt="${title}" class="book-img" loading="lazy" width=335>
-        <div class="book-description"> 
-          <p class="book-title">${title}</p>
-          <p class="book-author">${author}</p>
-        </div>
-      </div>
-      <div class="test">
-        <button class="btn-more">see more</button>
-      </div>
+     <div class="best-sellers-wraper">
+    <ul class="best-sellers-all-category-list">
+        <li class="best-sellers-own-category-list">
+            <p class="best-sellers-title">${list_name}</p>
+            <ul class="best-sellers-own-category-books">
+                <li class="best-sellers-book">
+                    <a href="#" id="${_id}"> <img src="${book_image}" alt="${title}" class="book-img">
+                        <div class="book-title"> 
+                        <p>${title}</p>
+                        <p class="book-author">${author}</p>
+                        </div></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+       
       `;
-    })
-    .join('');
-  booksCategoryEl.innerHTML = markup;
+    }
+  );
+
+  const markupBtn = `<button class="see-more">see more</button>`;
+  const screenWidth = window.screen.width;
+  const markupMobile = markupBook.slice(0, 1).join('');
+  const markupLaptop = markupBook.slice(0, 3).join('');
+  const markupDesktop = markupBook.slice(0, 5).join('');
+
+  let markup = '';
+  if (screenWidth < 767) {
+    markup = `<ul class="category-item-list">${markupMobile}  ${markupBtn}</ul>`;
+  } else if (screenWidth < 1440 && screenWidth >= 768) {
+    markup = `<ul class="category-item-list">${markupLaptop}  ${markupBtn}</ul>`;
+  } else {
+    markup = `<ul class="category-item-list">${markupDesktop}  ${markupBtn}</ul>`;
+  }
+  //  markup = markupBook + markupBtn;
+
+  return booksCategoryEl.insertAdjacentHTML('beforeend', markup);
 }
