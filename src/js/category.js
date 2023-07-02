@@ -3,8 +3,8 @@ import {
   fetchTopBooks,
   fetchCertainCategory,
 } from './api_request';
-import { loader, showLoader, hideLoader } from './loader';
 import Notiflix from 'notiflix';
+import { showLoader, hideLoader } from './loader';
 
 const categoryEl = document.querySelector('.category-list');
 const booksCategoryEl = document.querySelector('.books-category');
